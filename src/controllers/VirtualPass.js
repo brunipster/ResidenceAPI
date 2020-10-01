@@ -11,14 +11,12 @@ vpCtrl.create = async (req,res) =>{
             {
                 creation_date: new Date(),
                 state: VPStates.PENDING,
-                code: uuidv4(),
-                member_id: "2",
-                guard_id: "2"
+                code: uuidv4()
             }
         )
     
         const resp = await virtualPass.save();
-        res.send("VP registered" + resp, 200);
+        res.send("VP registered" + resp.code, 200);
     } catch (error) {
         console.log(error.message);
         res.send(error);

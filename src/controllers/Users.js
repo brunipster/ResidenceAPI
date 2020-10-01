@@ -6,7 +6,7 @@ const { generateToken } = require('@Utils/JWTHelper');
 const { UserRoles, UserStates } = require('@Utils/constants');
 
 async function registerUser (user, res){
-  const { name, email, password, rol} = user;
+  const { name, last_name,email, password, rol} = user;
   if (validateRegisterUser(user) > 0) {
     res.json(errors, 400);
   } else {
@@ -16,7 +16,7 @@ async function registerUser (user, res){
         res.send([{code:409, message:"Email is already in use"}], 400);
       } else {
         try {
-          let newUser = new User({ name, email, password, rol });
+          let newUser = new User({ name,lastName:last_name, email, password, rol });
           newUser.password = await newUser.encryptPassword(password);
           newUser = await newUser.save();
           return {code:200, id: newUser._id};
@@ -32,9 +32,12 @@ async function registerUser (user, res){
 
 function validateRegisterUser(user){
   let errors = [];
-  const { name, email, password, confirm_password} = user;
+  const { name, last_name, email, password, confirm_password} = user;
   if(name){
     errors.push({ code: 455, message: "Name empty"});
+  }
+  if(last_name){
+    errors.push({ code: 455, message: "Lastname empty"});
   }
   if(email){
     errors.push({ code: 456, message: "Email empty"});

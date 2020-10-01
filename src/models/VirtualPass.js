@@ -13,8 +13,8 @@ const VirtualPassSchema = new Schema({
         id: Schema.Types.ObjectId,
         profile: { type: Number , enum : Object.values(ProfileGenerateVPEnum), default: ProfileGenerateVPEnum.GUEST}
     },
-    member_id: { type: String },
-    guard_id: { type: String },
+    member_id: { type: String, unique: false },
+    guard_id: { type: String, unique: false },
     code: { type: String, required: true, unique: true },
     date: { type: Date, default: Date.now },
   });

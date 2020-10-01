@@ -5,14 +5,14 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "local": "nodemon .",
-    "start": "node ."
+    "local": "cross-env NODE_ENV=development nodemon .",
+    "start": "cross-env NODE_ENV=production node ."
   },
   "author": "Bruno Reyes",
   "license": "MIT",
   "dependencies": {
     "bcryptjs": "^2.4.3",
-    "dotenv": "^8.2.0",
+    "dotenv-flow": "^3.2.0",
     "express": "^4.17.1",
     "helmet": "^4.1.1",
     "jsonwebtoken": "^8.5.1",
