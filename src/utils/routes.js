@@ -7,7 +7,9 @@ module.exports = {
         methods: 'POST',
         path: '/register/guest',
         controller: userController.registerGuest,
-        roles: [UserRoles.ADMIN, UserRoles.MEMBER, UserRoles.GUARD]
+        roles: [UserRoles.ADMIN, 
+                UserRoles.MEMBER, 
+                UserRoles.GUARD]
       },
       {
         methods: 'POST',

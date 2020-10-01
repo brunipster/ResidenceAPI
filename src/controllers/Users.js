@@ -83,38 +83,13 @@ usersCtrl.registerGuard = async (req, res) => {
 }
 
 usersCtrl.registerAdmin = async (req, res) => {
-  let errors = [];
-  const { name, email, password, confirm_password , rol} = req.body;
-  console.log(req.body)
-  if (password != confirm_password) {
-    errors.push({ text: "Passwords do not match." });
-  }
-  if (password.length < 4) {
-    errors.push({ text: "Passwords must be at least 4 characters." });
-  }
-  console.log(errors)
-  if (errors.length > 0) {
-    res.json(errors);
-  } else {
-    // Look for email coincidence
-    try {
-      const emailUser = await User.findOne({ email: email });
-      if (emailUser) {
-        res.send("email is already in use");
-      } else {
-        // Saving a New User
-        try {
-          const newUser = new User({ name, email, password });
-          newUser.password = await newUser.encryptPassword(password);
-          await newUser.save();
-          res.send("user registered");
-        } catch (error) {
-          res.send(error.message);
-        }
-      }
-    } catch (error) {
-      res.send(error.message);
-    }
+  let bodyUser = req.body;
+  bodyUser.rol = UserRoles.ADMIN;
+  const result = await registerUser(bodyUser)
+  if(result.code === 200){
+    res.send({code: 200 ,message:result.id});
+  }else if(result === 500){
+    res.send([{code: 500 ,message:"Unknown message"}], 500);
   }
 }
 
