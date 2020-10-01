@@ -14,12 +14,15 @@ app.use(bodyParser.json())
 Object.keys(routes).forEach((key, index) => {
     routes[key].forEach((route) => {
         const {methods ,path ,controller, roles} = route
-
         router[methods.toLowerCase()](`/${key}${path}`, preValidationRequest(controller,roles))
     })
 })
 
 app.use('/api', router)
+
+app.route('/', (req, res) => {
+    res.send("Hello");
+})
 
 app.listen(process.env.PORT, () => {
     console.log(`Server started on port ${process.env.PORT}`);

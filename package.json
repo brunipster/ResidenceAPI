@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "local": "cp .env.development .env && nodemon ."
+    "local": "cp .env.local .env && nodemon .",
+    "start": "cp .env.development .env && node ."
   },
   "author": "Bruno Reyes",
   "license": "MIT",

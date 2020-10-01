@@ -3,6 +3,7 @@
 .DS_Store
 
 .env.development
+.env.local
 .env
 
 package-lock.json
