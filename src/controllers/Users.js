@@ -1,7 +1,6 @@
 const usersCtrl = {};
 
 const User = require('@Models/User');
-const { user } = require('@Utils/routes');
 const { generateToken } = require('@Utils/JWTHelper');
 const { UserRoles, UserStates } = require('@Utils/constants');
 

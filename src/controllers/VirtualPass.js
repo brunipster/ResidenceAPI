@@ -14,12 +14,25 @@ vpCtrl.create = async (req,res) =>{
                 code: uuidv4()
             }
         )
-    
-        const resp = await virtualPass.save();
-        res.send("VP registered" + resp.code, 200);
+        const vp = await virtualPass.save();
+        res.status(200).json({message:"VirtualPass created successfully", result:{code:vp.code}});
     } catch (error) {
-        console.log(error.message);
-        res.send(error);
+        res.status(500).json({message:"Internal error"});
+    }
+}
+
+vpCtrl.getByCode = async (req,res)=>{
+    try {
+        const {code} = req.params
+        const virtualPass = await VP.findOne({code:code}).exec()
+        if(virtualPass){
+            const result = {state:virtualPass.state, code: virtualPass.code}
+            res.status(200).json(result);
+        }else{
+            res.status(204).json({message:"Virutalpass not found"});
+        }
+    } catch (error) {
+        res.status(500).json({message:"Internal error"});
     }
 }
 

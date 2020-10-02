@@ -11,7 +11,7 @@ const VirtualPassSchema = new Schema({
     state: {type: String, enum : Object.values(VPStates), default: VPStates.PENDING},
     generate_by: {
         id: Schema.Types.ObjectId,
-        profile: { type: Number , enum : Object.values(ProfileGenerateVPEnum), default: ProfileGenerateVPEnum.GUEST}
+        profile: { type: Number , enum : Object.values(ProfileGenerateVPEnum)}
     },
     member_id: { type: String, unique: false },
     guard_id: { type: String, unique: false },

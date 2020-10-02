@@ -3,7 +3,7 @@ require ('module-alias/register')
 const express = require ('express')
 const router = express.Router()
 const bodyParser = require('body-parser')
-const routes = require('@Utils/routes')
+const routes = require('./src/routes')
 const preValidationRequest = require('@Middleware/preValidationRequest')
 require('./src/database');
 

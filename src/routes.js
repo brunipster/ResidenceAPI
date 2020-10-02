@@ -40,7 +40,13 @@ module.exports = {
         methods: 'POST',
         path: '/create',
         controller: vpController.create,
-        roles: [UserRoles.GUEST, UserRoles.MEMBER, UserRoles.GUARD]
+        roles: [UserRoles.GUEST, UserRoles.MEMBER, UserRoles.GUARD, UserRoles.ADMIN]
+      },
+      {
+        methods: 'get',
+        path: '/get/code/:code',
+        controller: vpController.getByCode,
+        roles: [UserRoles.GUEST, UserRoles.MEMBER, UserRoles.GUARD, UserRoles.ADMIN]
       }
     ]
   }
