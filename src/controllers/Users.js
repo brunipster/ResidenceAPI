@@ -6,6 +6,7 @@ const { UserRoles, UserStates } = require('@Utils/constants');
 
 async function registerUser (user, res){
   const { name, last_name,email, password, rol} = user;
+  console.log("test")
   if (validateRegisterUser(user) > 0) {
     res.json(errors, 400);
   } else {
