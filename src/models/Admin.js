@@ -9,4 +9,4 @@ const AdminSchema = new Schema({
     type: {type: Number, enum: Object.values(MemberType), default: MemberType.OTHER}
 })
 
-module.exports = model("Member", MemberSchema);
+module.exports = model("Admin", AdminSchema);
