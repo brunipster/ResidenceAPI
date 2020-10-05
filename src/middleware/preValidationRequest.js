@@ -23,6 +23,7 @@ function executeService(fn,req, res, next){
     const routePromise = fn(req, res, next)
     if (routePromise.catch) {
         routePromise.catch(err => {
+            console.log(err)
             return res.status(500).json({message: "Unexpected Error"});
         })
     }

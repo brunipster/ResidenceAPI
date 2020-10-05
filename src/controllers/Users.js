@@ -1,19 +1,21 @@
 const usersCtrl = {};
 
 const User = require('@Models/User');
+const Members = require('@Controller/Members');
 const { generateToken } = require('@Utils/JWTHelper');
 const { UserRoles, UserStates } = require('@Utils/constants');
+const {MemberType} = require("@Utils/constants")
 
 async function registerUser (user, res){
   const { name, last_name,email, password, rol} = user;
-  console.log("test")
+
   if (validateRegisterUser(user) > 0) {
     res.json(errors, 400);
   } else {
     try {
       const emailUser = await User.findOne({ email: email });
       if (emailUser) {
-        res.send([{code:409, message:"Email is already in use"}], 400);
+        res.status(400).json([{code:409, message:"Email is already in use"}]);
       } else {
         try {
           let newUser = new User({ name,lastName:last_name, email, password, rol });
@@ -55,7 +57,7 @@ function validateRegisterUser(user){
 usersCtrl.registerGuest = async (req, res) => {
   let bodyUser = req.body;
   bodyUser.rol = UserRoles.GUEST;
-  const result = await registerUser(bodyUser)
+  const result = await registerUser(bodyUser, res)
   if(result.code === 200){
     res.send({code: 200 ,message:result.id});
   }else if(result === 500){
@@ -66,10 +68,30 @@ usersCtrl.registerGuest = async (req, res) => {
 usersCtrl.registerMember = async (req, res) => {
   let bodyUser = req.body;
   bodyUser.rol = UserRoles.MEMBER;
-  const result = await registerUser(bodyUser)
-  if(result.code === 200){
-    res.send({code: 200 ,message:result.id});
-  }else if(result === 500){
+  const result = await registerUser(bodyUser, res)
+  if(result && result.code === 200){
+    const memberObj = {
+      name:bodyUser.name,
+      lastName:bodyUser.last_name,
+      user_id: result.id,
+      family_id: bodyUser.family_id,
+      type: bodyUser.type,
+      age: bodyUser.age
+    }
+    const resultCreateMember = await Members.create(memberObj)
+
+    if(resultCreateMember !== 500){
+      if(resultCreateMember.invalidFields && resultCreateMember.emptyFields){
+         res.json(
+          {
+            invalidFields:resultCreateMember.invalidFields,
+            emptyFields:resultCreateMember.emptyFields
+          }).status(400);
+      }else{
+        res.send({code: 200 ,message:"Member created successfully"});
+      }
+    }
+  }else if(result && result.code === 500){
     res.send([{code: 500 ,message:"Unknown message"}], 500);
   }
 };
@@ -77,7 +99,7 @@ usersCtrl.registerMember = async (req, res) => {
 usersCtrl.registerGuard = async (req, res) => {
   let bodyUser = req.body;
   bodyUser.rol = UserRoles.MEMBER;
-  const result = await registerUser(bodyUser)
+  const result = await registerUser(bodyUser, res)
   if(result.code === 200){
     res.send({code: 200 ,message:result.id});
   }else if(result === 500){
@@ -88,7 +110,7 @@ usersCtrl.registerGuard = async (req, res) => {
 usersCtrl.registerAdmin = async (req, res) => {
   let bodyUser = req.body;
   bodyUser.rol = UserRoles.ADMIN;
-  const result = await registerUser(bodyUser)
+  const result = await registerUser(bodyUser, res)
   if(result.code === 200){
     res.send({code: 200 ,message:result.id});
   }else if(result === 500){
