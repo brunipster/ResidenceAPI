@@ -17,22 +17,27 @@ vpCtrl.create = async (req,res) =>{
         if(member){
             const family_member = await Family.findOne({_id: member.family_id})
             if(family_member){
-                const code = uuidv4();
-                const qr = await QRHelper.generate(code)
-                const expirationDate = DateHelper.addDays(new Date(), day_to_expiration || 1);
-                const virtualPass = new VP(
-                    {
-                        creation_date: new Date(),
-                        expiration_date: expirationDate,
-                        state: VPStates.PENDING,
-                        code: code,
-                        qr: qr,
-                        member_id: Types.ObjectId(member_id),
-                        family_id: family_member._id,
-                    }
-                )
-                const vp = await virtualPass.save();
-                res.status(200).json({message:"VirtualPass created successfully", result:{code:vp.code, qr:vp.qr}});
+                const family_vps = await VP.find({family_id: family_member._id, state: {$nin: [VPStates.REJECTED, VPStates.DEPRECATED]}})
+                if(family_vps.length < family_member.limitPass){
+                    const code = uuidv4();
+                    const qr = await QRHelper.generate(code)
+                    const expirationDate = DateHelper.addDays(new Date(), day_to_expiration || 1);
+                    const virtualPass = new VP(
+                        {
+                            creation_date: new Date(),
+                            expiration_date: expirationDate,
+                            state: VPStates.PENDING,
+                            code: code,
+                            qr: qr,
+                            member_id: Types.ObjectId(member_id),
+                            family_id: family_member._id,
+                        }
+                    )
+                    const vp = await virtualPass.save();
+                    res.status(200).json({message:"VirtualPass created successfully", result:{code:vp.code, qr:vp.qr , expiration_date: DateHelper.formatToFrontend(vp.expiration_date)}});
+                }else{
+                    res.status(400).json({message:"Family´s limit virtual pass is exceeded"});
+                }
             }else{
                 res.status(202).json({message:"Family´s member not found"});
             }
@@ -40,7 +45,6 @@ vpCtrl.create = async (req,res) =>{
             res.status(202).json({message:"Member not found"});
         }
     } catch (error) {
-        console.log(error);
         res.status(500).json({message:"Internal error"});
     }
 }
