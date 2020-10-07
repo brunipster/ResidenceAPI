@@ -8,19 +8,22 @@ const Member = require('@Models/Member');
 
 const VP = require('@Models/VirtualPass');
 const QRHelper = require('@Utils/QRHelper')
+const DateHelper = require('@Utils/DateHelper')
 
 vpCtrl.create = async (req,res) =>{
     try {
-        const {member_id} = req.body
+        const {member_id, day_to_expiration} = req.body
         const member =  await Member.findOne({_id: Types.ObjectId(member_id)})
         if(member){
             const family_member = await Family.findOne({_id: member.family_id})
             if(family_member){
                 const code = uuidv4();
                 const qr = await QRHelper.generate(code)
+                const expirationDate = DateHelper.addDays(new Date(), day_to_expiration || 1);
                 const virtualPass = new VP(
                     {
                         creation_date: new Date(),
+                        expiration_date: expirationDate,
                         state: VPStates.PENDING,
                         code: code,
                         qr: qr,
