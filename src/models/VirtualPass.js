@@ -17,6 +17,7 @@ const VirtualPassSchema = new Schema({
     family_id: Schema.Types.ObjectId,
     guard_id: { type: String, unique: false },
     code: { type: String, required: true, unique: true },
+    qr: { type: String, required: true, unique: true },
     date: { type: Date, default: Date.now },
   });
 

@@ -19,6 +19,7 @@
     "module-alias": "^2.2.2",
     "mongoose": "^5.10.7",
     "morgan": "^1.10.0",
+    "qrcode": "^1.4.4",
     "uuid": "^8.3.0"
   },
   "_moduleAliases": {

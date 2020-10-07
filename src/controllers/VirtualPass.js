@@ -7,6 +7,7 @@ const Family = require('@Models/Family');
 const Member = require('@Models/Member');
 
 const VP = require('@Models/VirtualPass');
+const QRHelper = require('@Utils/QRHelper')
 
 vpCtrl.create = async (req,res) =>{
     try {
@@ -15,25 +16,28 @@ vpCtrl.create = async (req,res) =>{
         if(member){
             const family_member = await Family.findOne({_id: member.family_id})
             if(family_member){
+                const code = uuidv4();
+                const qr = await QRHelper.generate(code)
                 const virtualPass = new VP(
                     {
                         creation_date: new Date(),
                         state: VPStates.PENDING,
-                        code: uuidv4(),
+                        code: code,
+                        qr: qr,
                         member_id: Types.ObjectId(member_id),
                         family_id: family_member._id,
                     }
                 )
                 const vp = await virtualPass.save();
-                res.status(200).json({message:"VirtualPass created successfully", result:{code:vp.code}});
+                res.status(200).json({message:"VirtualPass created successfully", result:{code:vp.code, qr:vp.qr}});
             }else{
                 res.status(202).json({message:"Family´s member not found"});
             }
         }else{
             res.status(202).json({message:"Member not found"});
         }
-        
     } catch (error) {
+        console.log(error);
         res.status(500).json({message:"Internal error"});
     }
 }
