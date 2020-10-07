@@ -37,7 +37,8 @@ memberCtrl.create = async (member) => {
         return {emptyFields, invalidFields}
     }else{
             try {
-                const memberCreated = await Member({name,lastName, user_id,family_id, type, age});
+                let memberCreated = await Member({name,lastName, user_id,family_id, type, age});
+                memberCreated = memberCreated.save()
                 if (memberCreated){
                     return memberCreated
                 }else{
@@ -47,6 +48,20 @@ memberCtrl.create = async (member) => {
             return 500 
         }
         
+    }
+}
+
+memberCtrl.getById = async (req,res) =>{
+    try {
+        const {id} = req.params;
+        const member = await Member.findOne({_id: mongoose.Types.ObjectId(id)}).exec() 
+        if(member){
+            res.status(200).json(member)
+        }else{
+            res.status(204).json({message: "Member not found"});
+        }
+    } catch (error) {
+        res.status(500).json({message:"Internal error"});
     }
 }
 

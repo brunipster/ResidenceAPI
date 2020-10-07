@@ -1,4 +1,4 @@
-const {userController, vpController} = require('@Controller/')
+const {userController, vpController,familiesController, membersController} = require('@Controller')
 const {UserRoles} = require('@Utils/constants')
 
 module.exports = {
@@ -43,10 +43,32 @@ module.exports = {
         roles: [UserRoles.GUEST, UserRoles.MEMBER, UserRoles.GUARD, UserRoles.ADMIN]
       },
       {
-        methods: 'get',
-        path: '/get/code/:code',
+        methods: 'GET',
+        path: '/code/:code',
         controller: vpController.getByCode,
         roles: [UserRoles.GUEST, UserRoles.MEMBER, UserRoles.GUARD, UserRoles.ADMIN]
+      }
+    ],
+    family:[
+      {
+        methods: 'POST', 
+        path:'/register', 
+        controller: familiesController.create,
+        roles: [UserRoles.ADMIN]
+      },
+      {
+        methods: 'GET', 
+        path:'/id/:id', 
+        controller: familiesController.getById,
+        roles: [UserRoles.ADMIN]
+      }
+    ],
+    member:[
+      {
+        methods: 'GET',
+        path:'/id/:id',
+        controller: membersController.getById,
+        roles: [UserRoles.ADMIN]
       }
     ]
   }

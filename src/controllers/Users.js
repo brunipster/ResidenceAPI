@@ -88,7 +88,7 @@ usersCtrl.registerMember = async (req, res) => {
             emptyFields:resultCreateMember.emptyFields
           }).status(400);
       }else{
-        res.send({code: 200 ,message:"Member created successfully"});
+        res.send({code: 200 ,message:"Member created successfully", member: resultCreateMember});
       }
     }
   }else if(result && result.code === 500){
@@ -114,7 +114,7 @@ usersCtrl.registerAdmin = async (req, res) => {
   if(result.code === 200){
     res.send({code: 200 ,message:result.id});
   }else if(result === 500){
-    res.send([{code: 500 ,message:"Unknown message"}], 500);
+    res.send([{code: 500 ,message:"Unknown message"}]).status(500);
   }
 }
 
@@ -126,12 +126,12 @@ usersCtrl.signin = async(req,res) => {
     if(user.state !== UserStates.BLOCKED){
       try {
         await User.updateOne({ email: email}, {lastLogin: new Date(), state: UserStates.ACTIVE})
-        res.json({code:200, token:generateToken(user._id)}, 200)
+        res.json({code:200, token:generateToken(user._id)}).status(200)
       } catch (error) {
-        res.send("error",500);    
+        res.send("error",500);
       }
     }else{
-      res.send({code:401, message:"User blocked"}, 401)
+      res.send({code:401, message:"User blocked"}).status(401)
     }
   } else {
     res.send("error",500);

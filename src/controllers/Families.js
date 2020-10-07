@@ -1,6 +1,7 @@
 const familyCtrl = {};
 
 const Family = require('@Models/Family');
+const mongoose = require('mongoose');
 
 familyCtrl.create = async(req,res)=>{
     try {
@@ -15,15 +16,14 @@ familyCtrl.create = async(req,res)=>{
 
 familyCtrl.getById = async(req,res)=>{
     try {
-        const {id} = req.body;
-        const family = await Family.findOne({_id:id}).exec()
+        const {id} = req.params;
+        const family = await Family.findOne({_id:mongoose.Types.ObjectId(id)}).exec()
         if (family){
             const result = {name:family.name, direction:family.direction, limitPass:family.limitPass}
             res.status(200).json(result);
         }else{
             res.status(204).json({message:"Family not found"});
         }
-        res.status(200).json({message:"Family created successfully", result: {id:family._id}});
     } catch (error) {
         res.status(500).json({message:"Internal error"});
     }
