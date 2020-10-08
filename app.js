@@ -5,11 +5,13 @@ const router = express.Router()
 const bodyParser = require('body-parser')
 const routes = require('./src/routes')
 const preValidationRequest = require('@Middleware/preValidationRequest')
+
 require('./src/database');
 
 const app = express()
 
 app.use(bodyParser.json())
+
 
 Object.keys(routes).forEach((key, index) => {
     routes[key].forEach((route) => {

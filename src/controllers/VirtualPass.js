@@ -9,6 +9,7 @@ const Member = require('@Models/Member');
 const VP = require('@Models/VirtualPass');
 const QRHelper = require('@Utils/QRHelper')
 const DateHelper = require('@Utils/DateHelper')
+const PDFHelper = require('@Utils/PDFHelper')
 
 vpCtrl.create = async (req,res) =>{
     try {
@@ -34,7 +35,10 @@ vpCtrl.create = async (req,res) =>{
                         }
                     )
                     const vp = await virtualPass.save();
-                    res.status(200).json({message:"VirtualPass created successfully", result:{code:vp.code, qr:vp.qr , expiration_date: DateHelper.formatToFrontend(vp.expiration_date)}});
+                    const expirationDateFormatted = DateHelper.formatToFrontend(vp.expiration_date)
+                    const pdf = await PDFHelper.generatePDF({qr, expiration_date:expirationDateFormatted, guest_display_name: `${member.name} ${member.lastName}`},code)
+                    console.log(pdf)
+                    res.status(200).json({message:"VirtualPass created successfully", result:{code:vp.code,expiration_date: expirationDateFormatted,qr:vp.qr}});
                 }else{
                     res.status(400).json({message:"Family´s limit virtual pass is exceeded"});
                 }
@@ -45,6 +49,7 @@ vpCtrl.create = async (req,res) =>{
             res.status(202).json({message:"Member not found"});
         }
     } catch (error) {
+        console.log(error)
         res.status(500).json({message:"Internal error"});
     }
 }

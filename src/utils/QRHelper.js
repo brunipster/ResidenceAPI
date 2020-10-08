@@ -5,7 +5,7 @@ const QRCode = require('qrcode')
   module.exports = {
     generate: (code)=>{
         return new Promise((resolve, reject) =>{
-            QRCode.toDataURL(code, { errorCorrectionLevel: 'H' }, function (err, path) {
+            QRCode.toDataURL(code, { errorCorrectionLevel: 'H', scale: 6 }, function (err, path) {
                 if(err) return reject(err)
                 resolve(path);
             })

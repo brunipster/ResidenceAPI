@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <mate charest="utf-8" />
+        <title>Pase Virtual</title>
+    </head>
+    <body>
+        <div class="wrapper">
+            <div class="header">
+                <h2>Pase Virtual</h2>
+            </div>
+            <div class="content">
+                <div class="text">
+                    <p>Invitado:</p>
+                    <h3>{{this.virtualpass.guest_display_name}}</h3>
+                </div>
+                <div class="text">
+                    <p>Fecha de Expiración:</p>
+                    <h3>{{this.virtualpass.expiration_date}}</h3>
+                </div>
+                <img src='{{this.virtualpass.qr}}'/>
+            </div>
+        </div>
+    </body>
+</html>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+    .wrapper {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        border: 5px solid #E63946;
+        border-radius: 10px;
+        width: 300px;
+        background: #F1FAEE;
+    }
+    .header {
+        text-align: center;
+        background: #F1FAEE;
+    }
+    .content {
+        background: #1D3557;
+        color: #F1FAEE;
+        padding: 15px;
+        text-align: center;
+        border-radius: 0 0 5px 5px;
+    }
+    .content .text{
+        margin-bottom: 20px;
+    }
+    .content .text *{
+        margin:5px;
+    }
+</style>
