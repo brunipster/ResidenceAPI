@@ -69,4 +69,32 @@ vpCtrl.getByCode = async (req,res)=>{
     }
 }
 
+vpCtrl.sendCheckIn = async (req,res)=>{
+    try {
+        let {code} = req.body;
+        const resultCheckIn = await VP.updateOne({code: code, state: VPStates.APPROVED}, {checkin_date: new Date, state: VPStates.CHECKIN});
+        if(resultCheckIn.n > 0){
+            res.status(200).json({message:"VirtualPass Checkin"});
+        }else{
+            res.status(204).json({message:"VirtualPass invalid"});
+        }
+    } catch (error) {
+        res.status(500).json({message:"Internal error"});
+    }
+}
+
+vpCtrl.sendCheckOut = async (req,res)=>{
+    try {
+        let {code} = req.body;
+        const resultCheckOut = await VP.updateOne({code: code, state: VPStates.CHECKIN}, {checkout_date: new Date, state: VPStates.CHECKOUT});
+        if(resultCheckOut.n > 0){
+            res.status(200).json({message:"VirtualPass Checkin"});
+        }else{
+            res.status(204).json({message:"VirtualPass invalid"});
+        }
+    } catch (error) {
+        res.status(500).json({message:"Internal error"});
+    }
+}
+
 module.exports = vpCtrl;

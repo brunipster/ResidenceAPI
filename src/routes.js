@@ -47,6 +47,19 @@ module.exports = {
         path: '/code/:code',
         controller: vpController.getByCode,
         roles: [UserRoles.GUEST, UserRoles.MEMBER, UserRoles.GUARD, UserRoles.ADMIN]
+      },
+      {
+        methods: 'POST',
+        path: '/checkin',
+        controller: vpController.sendCheckIn,
+        roles: [UserRoles.GUARD, UserRoles.ADMIN]
+      }
+      ,
+      {
+        methods: 'POST',
+        path: '/checkout',
+        controller: vpController.sendCheckOut,
+        roles: [UserRoles.GUARD, UserRoles.ADMIN]
       }
     ],
     family:[
