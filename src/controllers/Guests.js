@@ -1,15 +1,14 @@
-const memberCtrl = {};
+const guestCtrl = {};
 
-const Member = require('@Models/Member');
+const Guest = require('@Models/Guest');
 const User = require('@Models/User');
 const Family = require('@Models/Family');
 const mongoose = require('mongoose');
 
-
-memberCtrl.create = async (member) => {
+guestCtrl.create = async (guest) => {
     let emptyFields = [];
     let invalidFields = [];
-    const {name, lastName, user_id, family_id, type, age} = member
+    const {name, lastName, user_id, family_id, age, genre} = guest
     if(!name){
         emptyFields.push("name")
     }
@@ -36,10 +35,10 @@ memberCtrl.create = async (member) => {
         return {emptyFields, invalidFields}
     }else{
         try {
-            let memberCreated = await Member({name,lastName, user_id,family_id, type, age});
-            memberCreated = memberCreated.save()
-            if (memberCreated){
-                return memberCreated
+            let guestCreated = await Guest({name,lastName, user_id,family_id, age, genre});
+            guestCreated = guestCreated.save()
+            if (guestCreated){
+                return guestCreated
             }else{
                 return 500
             }
@@ -50,18 +49,4 @@ memberCtrl.create = async (member) => {
     }
 }
 
-memberCtrl.getById = async (req,res) =>{
-    try {
-        const {id} = req.params;
-        const member = await Member.findOne({_id: mongoose.Types.ObjectId(id)}).exec() 
-        if(member){
-            res.status(200).json(member)
-        }else{
-            res.status(204).json({message: "Member not found"});
-        }
-    } catch (error) {
-        res.status(500).json({message:"Internal error"});
-    }
-}
-
-module.exports = memberCtrl
+module.exports = guestCtrl

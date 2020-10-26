@@ -2,6 +2,8 @@ const usersCtrl = {};
 
 const User = require('@Models/User');
 const Members = require('@Controller/Members');
+const Guests = require('@Controller/Guests');
+const Guards = require('@Controller/Guards');
 const { generateToken } = require('@Utils/JWTHelper');
 const { UserRoles, UserStates } = require('@Utils/constants');
 const {MemberType} = require("@Utils/constants")
@@ -58,9 +60,29 @@ usersCtrl.registerGuest = async (req, res) => {
   let bodyUser = req.body;
   bodyUser.rol = UserRoles.GUEST;
   const result = await registerUser(bodyUser, res)
-  if(result.code === 200){
-    res.send({code: 200 ,message:result.id});
-  }else if(result === 500){
+  if(result && result.code === 200){
+    const guestObj = {
+      name:bodyUser.name,
+      lastName:bodyUser.last_name,
+      user_id: result.id,
+      family_id: bodyUser.family_id,
+      genre: bodyUser.genre,
+      age: bodyUser.age
+    }
+    const resultCreateGuest = await Guests.create(guestObj)
+
+    if(resultCreateGuest !== 500){
+      if(resultCreateGuest.invalidFields && resultCreateGuest.emptyFields){
+         res.json(
+          {
+            invalidFields:resultCreateGuest.invalidFields,
+            emptyFields:resultCreateGuest.emptyFields
+          }).status(400);
+      }else{
+        res.send({code: 200 ,message:"Guest created successfully", guest: resultCreateGuest});
+      }
+    }
+  }else if(result && result.code === 500){
     res.send([{code: 500 ,message:"Unknown message"}], 500);
   }
 };
@@ -70,7 +92,7 @@ usersCtrl.registerMember = async (req, res) => {
   bodyUser.rol = UserRoles.MEMBER;
   const result = await registerUser(bodyUser, res)
   if(result && result.code === 200){
-    const memberObj = {
+    const guestObj = {
       name:bodyUser.name,
       lastName:bodyUser.last_name,
       user_id: result.id,
@@ -78,17 +100,17 @@ usersCtrl.registerMember = async (req, res) => {
       type: bodyUser.type,
       age: bodyUser.age
     }
-    const resultCreateMember = await Members.create(memberObj)
+    const resultCreateGuest = await Members.create(guestObj)
 
-    if(resultCreateMember !== 500){
-      if(resultCreateMember.invalidFields && resultCreateMember.emptyFields){
+    if(resultCreateGuest !== 500){
+      if(resultCreateGuest.invalidFields && resultCreateGuest.emptyFields){
          res.json(
           {
-            invalidFields:resultCreateMember.invalidFields,
-            emptyFields:resultCreateMember.emptyFields
+            invalidFields:resultCreateGuest.invalidFields,
+            emptyFields:resultCreateGuest.emptyFields
           }).status(400);
       }else{
-        res.send({code: 200 ,message:"Member created successfully", member: resultCreateMember});
+        res.send({code: 200 ,message:"Member created successfully", member: resultCreateGuest});
       }
     }
   }else if(result && result.code === 500){
@@ -98,11 +120,31 @@ usersCtrl.registerMember = async (req, res) => {
 
 usersCtrl.registerGuard = async (req, res) => {
   let bodyUser = req.body;
-  bodyUser.rol = UserRoles.MEMBER;
+  bodyUser.rol = UserRoles.GUEST;
   const result = await registerUser(bodyUser, res)
-  if(result.code === 200){
-    res.send({code: 200 ,message:result.id});
-  }else if(result === 500){
+  if(result && result.code === 200){
+    const guardObj = {
+      name:bodyUser.name,
+      lastName:bodyUser.last_name,
+      user_id: result.id,
+      family_id: bodyUser.family_id,
+      genre: bodyUser.genre,
+      age: bodyUser.age
+    }
+    const resultCreateGuard = await Guards.create(guardObj)
+
+    if(resultCreateGuard !== 500){
+      if(resultCreateGuard.invalidFields && resultCreateGuard.emptyFields){
+         res.json(
+          {
+            invalidFields:resultCreateGuard.invalidFields,
+            emptyFields:resultCreateGuard.emptyFields
+          }).status(400);
+      }else{
+        res.send({code: 200 ,message:" created successfully", guest: resultCreateGuard});
+      }
+    }
+  }else if(result && result.code === 500){
     res.send([{code: 500 ,message:"Unknown message"}], 500);
   }
 }

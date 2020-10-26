@@ -6,5 +6,6 @@ module.exports = {
     JWTSecret : process.env.JWT_SECRET || "shhhh",
     JWTExpire : process.env.JWT_EXPIRE || "10m",
     MemberType : Object.freeze({CHILD:1, COUPLE:2, PARENT:3, OTHER:0}),
+    GenreConst : Object.freeze({MALE:"M", FEMALE:"F", OTHER:"O"}),
     TypesActionLogs : Object.freeze({CREATE:1, UPDATE:2, DELETE:3})
 }
