@@ -1,0 +1,137 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "My User Project CRUD",
+        "description": "My User Project Application API",
+        "license": {
+        "name": "MIT",
+        "url": "https://opensource.org/licenses/MIT"
+    }
+    },
+    "host": "localhost:8000",
+    "basePath": "/",
+    "tags": [
+        {
+        "name": "Users",
+        "description": "API for users in the system"
+        }
+    ],
+    "schemes": ["http"],
+    "consumes": ["application/json"],
+    "produces": ["application/json"],
+    "paths": {
+        "/api/user/auth":{
+            "post":{
+                "tags": [
+                    "Users"
+                    ],
+                    "description": "Create new user in system",
+                    "parameters": [
+                        {
+                            "name": "Credentials",
+                            "in": "body",
+                            "description": "User credentials",
+                            "schema": {
+                                "email":"maildirection@domain.com",
+                                "password": "secretpassword"
+                            }
+                        }
+                    ]
+            }
+        },
+        "/users": {
+            "get": {
+                "tags": ["Users"],
+                "summary": "Get all users in system",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Users"
+                        }
+                    }
+                },
+                "produces": ["application/json"],
+                "responses": {
+                    "200": {
+                        "description": "Token User Authenticated",
+                        "schema": {
+                            "code": 200,
+                            "token": "fakejwt"
+                        }
+                    }
+                }
+            }
+        },
+        "/addUser": {
+            "post": {
+                "tags": [
+                "Users"
+                ],
+                "description": "Create new user in system",
+                "parameters": [
+                    {
+                        "name": "credentials",
+                        "in": "body",
+                        "description": "User Credential",
+                        "schema": {
+                            "email":"maildirection@domain.com",
+                            "password": "secretpassword"
+                        }
+                    }
+                ],
+                "produces": ["application/json"],
+                "responses": {
+                    "200": {
+                        "description": "New user is created",
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "User": {
+            "required": ["name","_id","companies"],
+            "properties": {
+                "_id": {
+                    "type": "integer",
+                    "uniqueItems": true
+                },
+                "isPublic": {
+                    "type": "boolean"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "books": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "amount": {
+                                "type": "number"
+                            }
+                        }
+                    }
+                },
+                "companies": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "Users": {
+            "type": "array",
+            "$ref": "#/definitions/User"
+        }
+    }
+}
